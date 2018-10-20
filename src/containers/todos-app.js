@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {addTodoAction} from '../actions';
+import {addTodoAction, toggleTodoAction} from '../actions';
 
 let nextId = 0;
 
@@ -29,7 +29,15 @@ export default class TodosApp extends React.Component {
           {
             items.map((item) => {
               return (
-                <li key={item.id.toString()}>
+                <li 
+                  key={item.id.toString()}
+                  style={{
+                    textDecoration: item.completed ? 'line-through' : 'none'
+                  }}
+                  onClick={() => {
+                    store.dispatch(toggleTodoAction(item.id));
+                  }}
+                >
                   {item.desc}
                 </li>
               );

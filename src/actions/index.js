@@ -11,3 +11,15 @@ export function addTodoAction(id, desc) {
     desc: desc
   };
 }
+
+/**
+ * Action creator for toggling a todo
+ * 
+ * @param {string} id 
+ */
+export function toggleTodoAction(id) {
+  return {
+    type: 'TOGGLE_TODO',
+    id: id
+  }
+}

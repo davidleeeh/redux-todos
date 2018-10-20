@@ -16,6 +16,16 @@ export default function todosReducer(state = [], action) {
           completed: false
         }
       ];
+
+    case 'TOGGLE_TODO':
+      return state.map((t) => {
+        return t.id === action.id ? 
+        {
+          ...t,
+          completed: !t.completed
+        } :
+        t;
+      })
     default:
       return state;
   }
