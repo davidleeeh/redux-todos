@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {addTodoAction, toggleTodoAction} from '../actions';
+import {addTodoAction, toggleTodoAction, setVisibilityFilter} from '../actions';
 
 let nextId = 0;
 
@@ -8,10 +8,12 @@ export default class TodosApp extends React.Component {
   // A very naive approach with all JSX in the render function
   render() {
     const { store } = this.props;
-    const items = store.getState();
+    const {todos, visibilityFilter} = store.getState();
+    const activeFilter = visibilityFilter;
 
     return (
       <div>
+        {/* Input Bar */}
         <h1>Todos App</h1>
         <input ref={
           (node) => {
@@ -25,9 +27,10 @@ export default class TodosApp extends React.Component {
           Add Todo
         </button>
 
+        {/* Item List */}
         <ul>
           {
-            items.map((item) => {
+            this.applyVisibilityFilter(todos, activeFilter).map((item) => {
               return (
                 <li 
                   key={item.id.toString()}
@@ -44,7 +47,57 @@ export default class TodosApp extends React.Component {
             })
           }
         </ul>
+
+        {/* Visibility Filters */}
+        <p>
+        Show:
+        {'  '}
+        {this.renderFilterLink('SHOW_ALL', 'All', activeFilter === 'SHOW_ALL')}
+
+        {'  '}
+        {this.renderFilterLink('SHOW_ACTIVE', 'Active', activeFilter === 'SHOW_ACTIVE')}
+
+
+        {'  '}
+        {this.renderFilterLink('SHOW_COMPLETED', 'Completed', activeFilter === 'SHOW_COMPLETED')}
+      </p>
       </div>
     );
+  }
+
+  applyVisibilityFilter(todos, filter) {
+    switch (filter) {
+      case 'SHOW_ACTIVE':
+        return todos.filter((t) => {
+          return !t.completed;
+        });
+
+      case 'SHOW_COMPLETED':
+        return todos.filter((t) => {
+          return t.completed;
+        });
+
+      default:
+        return todos;
+    }
+  }
+
+  renderFilterLink(filterType, filterLabel, isSelected) {
+    const { store } = this.props;
+
+    if (isSelected) {
+      return <span>{filterLabel}</span> 
+    } else {
+      return (
+        <a href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              store.dispatch(setVisibilityFilter(filterType))
+            }}
+          >
+            {filterLabel}
+          </a>
+      )
+    }
   }
 }

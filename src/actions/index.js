@@ -23,3 +23,15 @@ export function toggleTodoAction(id) {
     id: id
   }
 }
+
+/**
+ * Action creator for setting visibility filter
+ * 
+ * @param {string} filter 
+ */
+export function setVisibilityFilter(filter) {
+  return {
+    type: 'SET_VISIBILITY_FILTER',
+    filter: filter
+  };
+}

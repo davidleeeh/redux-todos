@@ -27,12 +27,11 @@ function todoReducer(state, action) {
 
 /**
  * Reducer for the todos.
- * Currently the state is simply an array of todo items.
  * 
  * @param {*} state 
  * @param {*} action 
  */
-export default function todosReducer(state = [], action) {
+function todosReducer(state = [], action) {
   switch (action.type) {
     case 'ADD_TODO':
       return [
@@ -47,4 +46,32 @@ export default function todosReducer(state = [], action) {
     default:
       return state;
   }
+}
+
+/**
+ * Reducer for the visibility filter
+ * 
+ * @param {*} state 
+ * @param {*} action 
+ */
+function visibilityFilterReducer(state, action) {
+  switch(action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+}
+
+/**
+ * Root reducer for the todos app
+ * 
+ * @param {*} state 
+ * @param {*} action 
+ */
+export default function todosAppReducer(state = {}, action) {
+  return {
+    todos: todosReducer(state.todos, action),
+    visibilityFilter: visibilityFilterReducer(state.visibilityFilter, action)
+  };
 }
