@@ -1,4 +1,31 @@
 /**
+ * Reducer for individual todo item.
+ * 
+ * @param {*} state 
+ * @param {*} action 
+ */
+function todoReducer(state, action) {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return {
+        id: action.id,
+          desc: action.desc,
+          completed: false
+      };
+
+    case 'TOGGLE_TODO':
+      return state.id === action.id ? 
+      {
+        ...state,
+        completed: !state.completed
+      } :
+      state;
+
+    default: return state;
+  }
+}
+
+/**
  * Reducer for the todos.
  * Currently the state is simply an array of todo items.
  * 
@@ -10,21 +37,12 @@ export default function todosReducer(state = [], action) {
     case 'ADD_TODO':
       return [
         ...state,
-        {
-          id: action.id,
-          desc: action.desc,
-          completed: false
-        }
+        todoReducer(undefined, action)
       ];
 
     case 'TOGGLE_TODO':
       return state.map((t) => {
-        return t.id === action.id ? 
-        {
-          ...t,
-          completed: !t.completed
-        } :
-        t;
+        return todoReducer(t, action);
       })
     default:
       return state;
