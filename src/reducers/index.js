@@ -9,8 +9,8 @@ function todoReducer(state, action) {
     case 'ADD_TODO':
       return {
         id: action.id,
-          desc: action.desc,
-          completed: false
+        desc: action.desc,
+        completed: false
       };
 
     case 'TOGGLE_TODO':
