@@ -1,13 +1,16 @@
+
+let nextId = 0;
+
 /**
  * Action creator for adding a todo
  * 
  * @param {string} id 
  * @param {string} desc 
  */
-export function addTodoAction(id, desc) {
+export function addTodoAction(desc) {
   return {
     type: 'ADD_TODO',
-    id: id,
+    id: ++nextId,
     desc: desc
   };
 }

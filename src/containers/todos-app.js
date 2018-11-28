@@ -1,18 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import {addTodoAction, toggleTodoAction, setVisibilityFilter} from '../actions';
-
+import {addTodoAction, toggleTodoAction} from '../actions';
 import TodoList from '../components/todo-list';
 import AddTodo from '../components/add-todo';
 import Footer from '../components/footer';
 
-let nextId = 0;
-
-export default class TodosApp extends React.Component {
-  // A very naive approach with all JSX in the render function
+class TodosApp extends React.Component {
   render() {
-    const { store } = this.props;
-    const {todos, visibilityFilter} = store.getState();
+    const {todos, visibilityFilter, dispatch} = this.props;
     const activeFilter = visibilityFilter;
 
     return (
@@ -20,7 +16,7 @@ export default class TodosApp extends React.Component {
         {/* Input Bar */}
         <AddTodo 
           onAddClick={(inputValue) => {
-            store.dispatch(addTodoAction(++nextId, inputValue));
+            dispatch(addTodoAction(inputValue));
           }}
         />
 
@@ -28,15 +24,12 @@ export default class TodosApp extends React.Component {
         <TodoList 
           todos={this.applyVisibilityFilter(todos, activeFilter)}
           onTodoClick={(id) => {
-            store.dispatch(toggleTodoAction(id));
+            dispatch(toggleTodoAction(id));
           }}
         />
 
         {/* Filter Links */}
-        <Footer
-          activeFilter={activeFilter}
-          onFilterClick={(filterType) => store.dispatch(setVisibilityFilter(filterType))}
-        />
+        <Footer />
       </div>
     );
   }
@@ -58,3 +51,18 @@ export default class TodosApp extends React.Component {
     }
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    todos: state.todos,
+    visibilityFilter: state.visibilityFilter
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch: dispatch
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodosApp);

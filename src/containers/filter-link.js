@@ -1,17 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux'; 
 
 import Link from '../components/link';
+import { setVisibilityFilter } from '../actions';
 
-export default function FilterLink({
-  children,
-  filterType,
-  selectedFilter,
-  onClick
-}) {
-  return <Link
-    isSelected={filterType === selectedFilter}
-    onClick={() => onClick(filterType)}
-    >
-      {children}
-    </Link>
+const mapStateToProps = (state, ownProps) => {
+  return {
+    isSelected: ownProps.filterType === state.visibilityFilter
+  };
 }
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    onClick: () => dispatch(setVisibilityFilter(ownProps.filterType))
+  }
+};
+
+// Container component that populate necessary props for Link
+export default connect(mapStateToProps, mapDispatchToProps)(Link);
