@@ -4,24 +4,7 @@ import { connect } from 'react-redux';
 
 import TodoItem from './todo-item';
 import { toggleTodoAction } from '../actions';
-
-
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'active':
-      return todos.filter((t) => {
-        return !t.completed;
-      });
-
-    case 'completed':
-      return todos.filter((t) => {
-        return t.completed;
-      });
-
-    default:
-      return todos;
-  }
-}
+import { getVisibleTodos } from '../reducers';
 
 const TodoList = ({
   todos,
@@ -48,7 +31,7 @@ const TodoList = ({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    todos: getVisibleTodos(state.todos, ownProps.match.params.filter || 'all')
+    todos: getVisibleTodos(state, ownProps.match.params.filter || 'all')
   }  
 }
 
