@@ -1,20 +1,20 @@
 import { createStore, applyMiddleware } from 'redux';
+import { throttle } from 'lodash';
+
+import { loadState, saveState } from './util/state-utils';
 import todosReducer from './reducers';
 
 const configureStore = () => {
-  // applyMiddleware() returns a store enhancer. The signature of
-  // store enhancer is createStore => createStore.
-  // Another way to apply store enhancer is to pass it as the last argument of
-  // createStore:
-  // 
-  // const store = createStore(todosReducer, preloadedState, applyMiddleware());
+  const preloadedState = loadState();
+  const store = createStore(todosReducer, preloadedState, applyMiddleware());
   
+  store.subscribe(throttle(() => {
+    saveState({
+      todos: store.getState().todos
+    });
+  }, 1000));
 
-  // Notice that the convention in Redux is to call it createStoreMiddleware.
-  // I found that name misleading because it sounds like it creates middleware
-  // instead of store. So I prefer call it createStoreWithMiddleware.
-  const createStoreWithMiddleware = applyMiddleware()(createStore);
-  return createStoreWithMiddleware(todosReducer);
+  return store;
 };
 
 export default configureStore;
