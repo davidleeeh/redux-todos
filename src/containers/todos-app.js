@@ -9,7 +9,7 @@ import Footer from '../components/footer';
 class TodosApp extends React.Component {
   render() {
     const {todos, visibilityFilter, dispatch} = this.props;
-    const activeFilter = visibilityFilter;
+    const activeFilter = visibilityFilter || 'all';
 
     return (
       <div>
@@ -36,12 +36,12 @@ class TodosApp extends React.Component {
 
   applyVisibilityFilter(todos, filter) {
     switch (filter) {
-      case 'SHOW_ACTIVE':
+      case 'active':
         return todos.filter((t) => {
           return !t.completed;
         });
 
-      case 'SHOW_COMPLETED':
+      case 'completed':
         return todos.filter((t) => {
           return t.completed;
         });
@@ -52,10 +52,10 @@ class TodosApp extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     todos: state.todos,
-    visibilityFilter: state.visibilityFilter
+    visibilityFilter: ownProps.match.params.filter
   };
 }
 

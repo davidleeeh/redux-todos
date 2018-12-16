@@ -1,20 +1,21 @@
 import React from 'react';
-import { connect } from 'react-redux'; 
+import { NavLink } from 'react-router-dom';
 
-import Link from '../components/link';
-import { setVisibilityFilter } from '../actions';
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    isSelected: ownProps.filterType === state.visibilityFilter
-  };
+const FilterLink = ({
+  filterType,
+  children
+}) => {
+  let path = `/${filterType}`;
+  return (
+    <NavLink 
+      to={path} 
+      activeStyle={{
+        textDecoration: 'none',
+        color: 'black'
+      }}>
+      {children}
+    </NavLink>
+  )
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    onClick: () => dispatch(setVisibilityFilter(ownProps.filterType))
-  }
-};
-
-// Container component that populate necessary props for Link
-export default connect(mapStateToProps, mapDispatchToProps)(Link);
+export default FilterLink;

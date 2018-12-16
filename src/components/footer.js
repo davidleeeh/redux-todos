@@ -8,17 +8,17 @@ export default function Footer({}) {
       <p>
         Show:
         {'  '}
-        <FilterLink filterType='SHOW_ALL'>
+        <FilterLink filterType='all'>
             All
         </FilterLink>
 
         {'  '}
-        <FilterLink filterType='SHOW_ACTIVE'>
+        <FilterLink filterType='active'>
             Active
         </FilterLink>
 
         {'  '}
-        <FilterLink filterType='SHOW_COMPLETED'>
+        <FilterLink filterType='completed'>
             Completed
         </FilterLink>
       </p>

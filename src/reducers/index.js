@@ -49,21 +49,6 @@ function todosReducer(state = [], action) {
 }
 
 /**
- * Reducer for the visibility filter
- * 
- * @param {*} state 
- * @param {*} action 
- */
-function visibilityFilterReducer(state, action) {
-  switch(action.type) {
-    case 'SET_VISIBILITY_FILTER':
-      return action.filter;
-    default:
-      return state;
-  }
-}
-
-/**
  * Root reducer for the todos app
  * 
  * @param {*} state 
@@ -71,7 +56,6 @@ function visibilityFilterReducer(state, action) {
  */
 export default function todosAppReducer(state = {}, action) {
   return {
-    todos: todosReducer(state.todos, action),
-    visibilityFilter: visibilityFilterReducer(state.visibilityFilter, action)
+    todos: todosReducer(state.todos, action)
   };
 }

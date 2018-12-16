@@ -1,5 +1,5 @@
 
-let nextId = 0;
+import uuidV4 from 'uuid/v4';
 
 /**
  * Action creator for adding a todo
@@ -10,7 +10,7 @@ let nextId = 0;
 export function addTodoAction(desc) {
   return {
     type: 'ADD_TODO',
-    id: ++nextId,
+    id: uuidV4(),
     desc: desc
   };
 }
@@ -25,16 +25,4 @@ export function toggleTodoAction(id) {
     type: 'TOGGLE_TODO',
     id: id
   }
-}
-
-/**
- * Action creator for setting visibility filter
- * 
- * @param {string} filter 
- */
-export function setVisibilityFilter(filter) {
-  return {
-    type: 'SET_VISIBILITY_FILTER',
-    filter: filter
-  };
 }
