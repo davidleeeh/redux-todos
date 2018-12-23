@@ -1,3 +1,4 @@
+import { combineReducers } from "redux";
 /**
  * Reducer for individual todo item.
  * 
@@ -26,27 +27,53 @@ function todoItemReducer(state, action) {
 }
 
 /**
- * Reducer for the todos.
+ * Reducer for the todos by Id.
  * 
  * @param {*} state 
  * @param {*} action 
  */
-export default function todosReducer(state = [], action) {
+const byId = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_TODO':
-      return [
-        ...state,
-        todoItemReducer(undefined, action)
-      ];
-
     case 'TOGGLE_TODO':
-      return state.map((t) => {
-        return todoItemReducer(t, action);
-      })
+      return {
+        ...state,
+        [action.id]: todoItemReducer(state[action.id], action)
+      };
+    
     default:
       return state;
   }
 }
+
+/**
+ * Reducer for all todo ids
+ * 
+ * @param {*} state 
+ * @param {*} action 
+ */
+const allIds = (state = [], action) => {
+  switch(action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        action.id
+      ];
+    
+    default:
+      return state;
+  }
+};
+
+/**
+ * Root reducer for todos
+ */
+const todosReducer = combineReducers({
+  byId: byId,
+  allIds: allIds
+});
+
+export default todosReducer;
 
 /**
  * Helper function to get filtered todos from the
@@ -56,19 +83,21 @@ export default function todosReducer(state = [], action) {
  * @param {*} filter 
  */
 export const getVisibleTodos = (state, filter) => {
+  const allTodos = state.allIds.map(id => state.byId[id]);
+
   switch (filter) {
     case 'active':
-      return state.filter((t) => {
+      return allTodos.filter((t) => {
         return !t.completed;
       });
 
     case 'completed':
-      return state.filter((t) => {
+      return allTodos.filter((t) => {
         return t.completed;
       });
 
     default:
-      return state;
+      return allTodos;
   }
 }
 
