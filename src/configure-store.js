@@ -1,23 +1,31 @@
 import { createStore, applyMiddleware } from 'redux';
-import { throttle } from 'lodash';
 
-import { loadState, saveState } from './util/state-utils';
 import todosReducer from './reducers';
 import actionLog from './middlewares/action-log';
+import promiseSupport from './middlewares/promise-support';
+
+const wrapStoreMiddlewares = (store, middlewares) => {
+  // Usually it's more intuitive to specify middlewares by the
+  // order that are executed from left to right.
+  // But when wrapping the middlewares around raw dispatch function,
+  // we need to wrap it with the last middleware to be executed.
+  // Therefore we need to reverse the array first.
+  middlewares.slice().reverse().forEach(middleware => {
+    store.dispatch = middleware(store)(store.dispatch);
+  });
+}
 
 const configureStore = () => {
-  const preloadedState = loadState();
-
+  const store = createStore(todosReducer);
+  const middlewares = [promiseSupport];
+  
   // Usually a good practice to use action logger only
   // in non-production environment
-  const middlewares = process.env.NODE_ENV !== 'production' ? [actionLog] : [];
-  const store = createStore(todosReducer, preloadedState, applyMiddleware(...middlewares));
+  if (process.env.NODE_ENV !== 'production') {
+    middlewares.push(actionLog);
+  };
 
-  store.subscribe(throttle(() => {
-    saveState({
-      todos: store.getState().todos
-    });
-  }, 1000));
+  wrapStoreMiddlewares(store, middlewares);
 
   return store;
 };
